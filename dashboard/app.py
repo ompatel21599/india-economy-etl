@@ -98,7 +98,6 @@ def load_data():
     df = pd.read_sql("SELECT * FROM india_economy_data ORDER BY year", engine)
     df["decade"] = (df["year"] // 10 * 10).astype(str) + "s"
     return df
-Why:
 
 df = load_data()
 
