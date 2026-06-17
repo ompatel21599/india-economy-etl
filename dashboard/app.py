@@ -80,16 +80,25 @@ components.html(f"""<script>
 </script>""", height=0)
 
 # ── Data ───────────────────────────────────────────────────────────────────
+def get_secret(key):
+    if key in st.secrets:
+        return st.secrets[key]
+    return os.getenv(key)
+
 @st.cache_data
 def load_data():
+    db_user = get_secret("DB_USER")
+    db_password = get_secret("DB_PASSWORD")
+    db_host = get_secret("DB_HOST")
+    db_port = get_secret("DB_PORT")
+    db_name = get_secret("DB_NAME")
+
     engine = create_engine(
-        f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}"
-        f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}")
+        f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}?sslmode=require")
     df = pd.read_sql("SELECT * FROM india_economy_data ORDER BY year", engine)
     df["decade"] = (df["year"] // 10 * 10).astype(str) + "s"
-    df["inf_cat"] = pd.cut(df["inflation_rate"], bins=[-999,5,10,999],
-                           labels=["Low <5%","Medium 5–10%","High >10%"])
     return df
+Why:
 
 df = load_data()
 
