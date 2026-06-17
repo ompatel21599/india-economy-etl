@@ -1,6 +1,3 @@
-print("Script started")
-print(__file__)
-
 import requests
 import pandas as pd
 import os
@@ -53,4 +50,4 @@ def fetch_all_indicators():
 if __name__ == "__main__":
     fetch_all_indicators()
 
-print("Script started")
+
